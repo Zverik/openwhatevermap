@@ -13,6 +13,8 @@
 <div id="map"></div>
 <script type="text/javascript">
 var WhateverTileLayer = L.TileLayer.extend({
+    _tileUrls: {},
+
     getTileUrl: function (coords) {
         var data = {
             r: L.Browser.retina ? '@2x' : '',
@@ -29,49 +31,62 @@ var WhateverTileLayer = L.TileLayer.extend({
             data['-y'] = invertedY;
         }
 
-        return L.Util.template(
-            this._url[Math.floor(Math.random() * this._url.length)],
-            L.Util.extend(data, this.options));
+        var i = Math.floor(Math.random() * this._url.length);
+        this._tileUrls[data.x+','+data.y+','+data.z] = i;
+        return L.Util.template(this._url[i][0], L.Util.extend(data, this.options));
+    },
+
+    getTileData: function(latlng) {
+        var zoom = this._getZoomForUrl(),
+            pixel = map.project([latlng.lat, latlng.lng], zoom).floor(),
+            tileSize = this.getTileSize(),
+            coords = pixel.unscaleBy(tileSize).floor(),
+            i = this._tileUrls[coords.x+','+coords.y+','+zoom];
+        return this._url[i];
     }
 });
 
 var map = L.map('map', { minZoom: 3, maxZoom: 18 }).setView([28, 18], 3);
 map.attributionControl.setPrefix("");
-map.addLayer(new WhateverTileLayer([
-  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-  // Humanitarian © Humanitarian OpenStreetMap Team
-  'http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-  // MapSurfer.NET © GIScience Research Group @ Heidelberg University
-  // 'http://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}',
-  // MapSurfer.NET gray © GIScience Research Group @ Heidelberg University
-  'http://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}',
-  // OpenStreetMap.de © OpenStreetMap - Deutschland
-  'http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png',
-  // OpenStreetMap.fr © OpenStreetMap France
-  'http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
-  // 4UMaps © http://www.4umaps.eu/
-  'http://4umaps.eu/{z}/{x}/{y}.png',
-  // Sputnik © Sputnik Maps
-  'http://{s}.tiles.maps.sputnik.ru/{z}/{x}/{y}.png',
-  // CartoDB Dark Matter © Carto
-  'http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
-  // Toner © Stamen
-  'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png',
-  // ÖPNV Karte © ÖPNV Karte
-  'http://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png',
-  // OpenTopoMap © OpenTopoMap
-  'http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
-  // Watercolor © Stamen
-  'http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',
+var whateverLayer = new WhateverTileLayer([
+  ['https://tile.openstreetmap.org/{z}/{x}/{y}.png', 'OpenStreetMap Carto', 'OpenStreetMap', 'https://www.openstreetmap.org/'],
+  ['http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', 'Humanitarian', 'Humanitarian OpenStreetMap Team', 'http://hot.openstreetmap.org/'],
+  // ['http://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', 'MapSurfer.NET', 'GIScience Research Group @ Heidelberg University', 'http://giscience.uni-hd.de/'],
+  ['http://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}', 'MapSurfer.NET Gray', 'GIScience Research Group @ Heidelberg University', 'http://giscience.uni-hd.de/'],
+  ['http://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', 'OpenStreetMap.de', 'OpenStreetMap Deutschland', 'https://www.openstreetmap.de/'],
+  ['http://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', 'OpenStreetMap.fr', 'OpenStreetMap France', 'https://www.openstreetmap.fr/'],
+  ['http://4umaps.eu/{z}/{x}/{y}.png', '4UMaps', '4UMaps', 'http://www.4umaps.eu'],
+  ['http://{s}.tiles.maps.sputnik.ru/{z}/{x}/{y}.png', 'Sputnik', 'Sputnik', 'https://maps.sputnik.ru/'],
+  ['http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', 'CartoDB Dark Matter', 'Carto', 'https://carto.com/attribution/#basemaps'],
+  ['http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png', 'Toner', 'Stamen', 'http://maps.stamen.com/'],
+  ['http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg', 'Watercolor', 'Stamen', 'http://maps.stamen.com/'],
+  ['http://tileserver.memomaps.de/tilegen/{z}/{x}/{y}.png', 'ÖPNV Karte', 'ÖPNV Karte', 'https://www.öpnvkarte.de/'],
+  ['http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', 'OpenTopoMap', 'OpenTopoMap', 'https://opentopomap.org/'],
 
-  // Please do not steal my API keys for Thuderforest maps!
-  'https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88',
-  'https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88',
-  'https://{s}.tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88',
-  'https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88',
-  'https://{s}.tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88'
-  ], { attribution: 'Map &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | Tiles &copy; their respective authors' }));
+  // Please do not steal my API key for Thunderforest maps!
+  ['https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88', 'OpenCycleMap', 'Thunderforest', 'https://thunderforest.com/'],
+  ['https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88', 'Transport Dark', 'Thunderforest', 'https://thunderforest.com/'],
+  ['https://{s}.tile.thunderforest.com/spinal-map/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88', 'Spinal Map', 'Thunderforest', 'https://thunderforest.com/'],
+  ['https://{s}.tile.thunderforest.com/pioneer/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88', 'Pioneer', 'Thunderforest', 'https://thunderforest.com/'],
+  ['https://{s}.tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=41f4f936f1d148f69cbd100812875c88', 'Mobile Atlas', 'Thunderforest', 'https://thunderforest.com/']
+  ], { attribution: 'Map &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | Click on the map for tile authors' }).addTo(map);
+
 var hash = new L.Hash(map);
+
+lastUrl = '';
+map.on('click', function(e) {
+  var data = whateverLayer.getTileData(e.latlng);
+  if (!data)
+    return;
+  if (lastUrl == data[0]) {
+    map.closePopup();
+    lastUrl = '';
+  } else {
+    lastUrl = data[0];
+    map.openPopup('<b>'+data[1]+'</b><br>&copy; <a target="owm" href="'+data[3]+'">'+data[2]+'</a>', e.latlng);
+  }
+});
+map.on('zoomstart', function() { map.closePopup(); lastUrl = ''; });
 </script>
 </body>
 </html>
