@@ -37,11 +37,13 @@ var WhateverTileLayer = L.TileLayer.extend({
     },
 
     getTileData: function(latlng) {
-        var zoom = this._getZoomForUrl(),
-            pixel = map.project([latlng.lat, latlng.lng], zoom).floor(),
-            tileSize = this.getTileSize(),
-            coords = pixel.unscaleBy(tileSize).floor(),
-            i = this._tileUrls[coords.x+','+coords.y+','+zoom];
+        var zoom = this._getZoomForUrl();
+        // make sure lat/long values are constrained to +-90,+-180 so that a popup is displayed when users pan across the entire world
+        var wrappedLatLng = latlng.wrap();
+        var pixel = map.project(wrappedLatLng, zoom).floor();
+        var tileSize = this.getTileSize();
+        var coords = pixel.unscaleBy(tileSize).floor();
+        var i = this._tileUrls[coords.x+','+coords.y+','+zoom];
         return this._url[i];
     }
 });
@@ -77,6 +79,11 @@ var whateverLayer = new WhateverTileLayer([
   ['https://{s}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.png?access_token={mbkey}', 'Comic', 'Mapbox', 'https://www.mapbox.com/about/maps/'],
   ['https://{s}.tiles.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token={mbkey}', 'Pencil', 'Mapbox', 'https://www.mapbox.com/about/maps/'],
   ['https://{s}.tiles.mapbox.com/v4/mapbox.pirates/{z}/{x}/{y}.png?access_token={mbkey}', 'Pirates', 'Mapbox', 'https://www.mapbox.com/about/maps/'],
+  ['http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', 'World Topo', 'Powered by Esri | HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia and the GIS User Community', 'https://www.esri.com/en-us/home'],
+  ['https://services.arcgisonline.com/arcgis/rest/services/Ocean_Basemap/MapServer/tile/{z}/{y}/{x}', 'Ocean Basemap', 'Powered by Esri | HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia and the GIS User Community', 'https://www.esri.com/en-us/home'],
+  ['https://services.arcgisonline.com/arcgis/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', 'World Street Map', 'Powered by Esri | HERE, DeLorme, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), swisstopo, MapmyIndia and the GIS User Community', 'https://www.esri.com/en-us/home'],
+  ['https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', 'Dark Gray', 'Powered by Esri | Esri, HERE, DeLorme, MapmyIndia, © OpenStreetMap contributors, and the GIS user community', 'https://www.esri.com/en-us/home'],['https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/MapServer/tile/{z}/{y}/{x}', 'Light Gray', 'Powered by Esri | HERE, DeLorme, MapmyIndia, © OpenStreetMap contributors, and the GIS user community', 'https://www.esri.com/en-us/home'],
+  ['http://server.arcgisonline.com/ArcGIS/rest/services/NatGeo_World_Map/MapServer//MapServer/tile/{z}/{y}/{x}', 'National Geographic', 'Powered by Esri | National Geographic, Esri, DeLorme, HERE, UNEP-WCMC, USGS, NASA, ESA, METI, NRCAN, GEBCO, NOAA, increment P Corp.', 'https://www.esri.com/en-us/home']
   ], {
     attribution: 'Map &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | Click on the map for tile authors',
     // Please do not steal my API keys!
