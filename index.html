@@ -31,17 +31,21 @@ var WhateverTileLayer = L.TileLayer.extend({
             data['-y'] = invertedY;
         }
 
-        var i = Math.floor(Math.random() * this._url.length);
+        var i = -1;
+        while (i < 0 || (this._url[i].length >= 5 && this._url[i][4] < data.z))
+            i = Math.floor(Math.random() * this._url.length);
         this._tileUrls[data.x+','+data.y+','+data.z] = i;
         return L.Util.template(this._url[i][0], L.Util.extend(data, this.options));
     },
 
     getTileData: function(latlng) {
-        var zoom = this._getZoomForUrl(),
-            pixel = map.project([latlng.lat, latlng.lng], zoom).floor(),
-            tileSize = this.getTileSize(),
-            coords = pixel.unscaleBy(tileSize).floor(),
-            i = this._tileUrls[coords.x+','+coords.y+','+zoom];
+        var zoom = this._getZoomForUrl();
+        // make sure lat/long values are constrained to +-90,+-180 so that a popup is displayed when users pan across the entire world
+        var wrappedLatLng = latlng.wrap();
+        var pixel = map.project(wrappedLatLng, zoom).floor();
+        var tileSize = this.getTileSize();
+        var coords = pixel.unscaleBy(tileSize).floor();
+        var i = this._tileUrls[coords.x+','+coords.y+','+zoom];
         return this._url[i];
     }
 });
