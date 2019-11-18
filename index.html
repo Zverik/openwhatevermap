@@ -4,8 +4,8 @@
 <title>OpenWhateverMap :: An Open Awsumnez Map</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet-src.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 <script src="leaflet-hash.js"></script>
 <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
@@ -55,8 +55,7 @@ map.attributionControl.setPrefix("");
 var whateverLayer = new WhateverTileLayer([
   ['https://tile.openstreetmap.org/{z}/{x}/{y}.png', 'OpenStreetMap Carto', 'OpenStreetMap', 'https://www.openstreetmap.org/'],
   ['https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', 'Humanitarian', 'Humanitarian OpenStreetMap Team', 'http://hot.openstreetmap.org/'],
-  ['https://korona.geog.uni-heidelberg.de/tiles/roads/x={x}&y={y}&z={z}', 'MapSurfer.NET', 'GIScience Research Group @ Heidelberg University', 'http://giscience.uni-hd.de/'],
-  ['https://korona.geog.uni-heidelberg.de/tiles/roadsg/x={x}&y={y}&z={z}', 'MapSurfer.NET Gray', 'GIScience Research Group @ Heidelberg University', 'http://giscience.uni-hd.de/'],
+  ['https://api.openrouteservice.org/mapsurfer/{z}/{x}/{y}.png?api_key={orskey}', 'MapSurfer', 'GIScience Research Group @ Heidelberg University', 'https://maps.openrouteservice.org/'],
   ['https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', 'OpenStreetMap.de', 'OpenStreetMap Deutschland', 'https://www.openstreetmap.de/'],
   ['https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', 'OpenStreetMap.fr', 'OpenStreetMap France', 'https://www.openstreetmap.fr/'],
   ['https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', 'Hydda Full', 'OpenStreetMap Sweden', 'http://openstreetmap.se/'],
@@ -81,12 +80,13 @@ var whateverLayer = new WhateverTileLayer([
   ['https://{s}.tiles.mapbox.com/v4/mapbox.comic/{z}/{x}/{y}.png?access_token={mbkey}', 'Comic', 'Mapbox', 'https://www.mapbox.com/about/maps/'],
   ['https://{s}.tiles.mapbox.com/v4/mapbox.pencil/{z}/{x}/{y}.png?access_token={mbkey}', 'Pencil', 'Mapbox', 'https://www.mapbox.com/about/maps/'],
   ['https://{s}.tiles.mapbox.com/v4/mapbox.pirates/{z}/{x}/{y}.png?access_token={mbkey}', 'Pirates', 'Mapbox', 'https://www.mapbox.com/about/maps/'],
-  ['https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', 'CyclOSM', 'CyclOSM', 'https://www.cyclosm.org/'],
+  ['https://{s}.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png', 'CyclOSM', 'CyclOSM', 'https://www.cyclosm.org/']
   ], {
     attribution: 'Map &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | Click on the map for tile authors',
     // Please do not steal my API keys!
     tfkey: '41f4f936f1d148f69cbd100812875c88',
-    mbkey: 'pk.eyJ1IjoienZlcmlrIiwiYSI6IjVLMGxwbGsifQ.pdb83NbjTrfl9ibbdjPSsg'
+    mbkey: 'pk.eyJ1IjoienZlcmlrIiwiYSI6IjVLMGxwbGsifQ.pdb83NbjTrfl9ibbdjPSsg',
+    orskey: '5b3ce3597851110001cf6248a0b92217d42646888f46e42c913a5937'
   }).addTo(map);
 
 var hash = new L.Hash(map);
