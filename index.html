@@ -4,8 +4,8 @@
 <title>OpenWhateverMap :: An Open Awsumnez Map</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="leaflet-hash.js"></script>
 <style>html, body, #map { margin: 0; height: 100%; }</style>
 </head>
@@ -58,8 +58,9 @@ var whateverLayer = new WhateverTileLayer([
   ['https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png', 'OpenStreetMap.de', 'OpenStreetMap Deutschland', 'https://www.openstreetmap.de/'],
   ['https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', 'OpenStreetMap.fr', 'OpenStreetMap France', 'https://www.openstreetmap.fr/'],
   // ['https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', 'Hydda Full', 'OpenStreetMap Sweden', 'http://openstreetmap.se/'],
-  ['http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', 'CartoDB Positron', 'Carto', 'https://carto.com/attribution/'],
-  ['http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', 'CartoDB Dark Matter', 'Carto', 'https://carto.com/attribution/'],
+  ['https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key={ckey}', 'CartoDB Positron', 'Carto', 'https://carto.com/attributions/'],
+  ['https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png?key={ckey}', 'CartoDB Dark Matter', 'Carto', 'https://carto.com/attributions/'],
+  ['https://basemaps.cartocdn.com/voyager/{z}/{x}/{y}{r}.png?key={ckey}', 'CartoDB Voyager', 'Carto', 'https://carto.com/attributions/'],
   ['https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png', 'Toner', 'Stadia / Stamen', 'https://stadiamaps.com/stamen/'],
   ['https://tiles.stadiamaps.com/tiles/stamen_toner_lite/{z}/{x}/{y}{r}.png', 'Toner Lite', 'Stadia / Stamen', 'https://stadiamaps.com/stamen/'], 
   ['https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg', 'Watercolor', 'Stadia / Stamen', 'https://stadiamaps.com/stamen/'],
@@ -79,7 +80,8 @@ var whateverLayer = new WhateverTileLayer([
     attribution: 'Map &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> | Click on the map for tile authors',
     // Please do not steal my API keys!
     tfkey: '41f4f936f1d148f69cbd100812875c88',
-    ttkey: '4c48d8f341fe037a61c66f57fa54e3a9'
+    ttkey: '4c48d8f341fe037a61c66f57fa54e3a9',
+    ckey: 'cb1_273e_1_bdee085b7321cbd069b8ffa7'
   }).addTo(map);
 
 var hash = new L.Hash(map);
